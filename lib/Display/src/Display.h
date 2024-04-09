@@ -13,7 +13,7 @@ public:
 private:
   SSD1306Wire driver;
   TickType_t period_ticks;
-  // DataMonitor& monitor;
+  DataMonitor& monitor;
 };
 
 #endif
