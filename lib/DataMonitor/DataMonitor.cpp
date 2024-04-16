@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include "freertos/FreeRTOS.h"
 
-DataMonitor::DataMonitor(ThreadSafeBuffer<Measurement> &buffer, int period_ms) : buf{buffer}, humidity{-1}, temperature{-1}, period_ticks{pdMS_TO_TICKS(period_ms)}
+DataMonitor::DataMonitor(ThreadSafeBuffer<Measurement> &buffer, int period_ms) : buf{buffer}, humidity{-1}, temperature{-1}, CO2ppm{-1}, period_ticks{pdMS_TO_TICKS(period_ms)}
 {
 }
 
@@ -22,6 +22,9 @@ void DataMonitor::run()
       humidity = m.value.floatValue;
       printf("monitor: humidity = %.2f\n", m.value.floatValue);
       break;
+    case measurementType::CO2:
+      CO2ppm = m.value.intValue;
+      printf("monitor: C02 concentration = %d\n", m.value.intValue);
     default:
       break;
     }
@@ -31,3 +34,4 @@ void DataMonitor::run()
 
 float DataMonitor::getTemperature() { return temperature; }
 float DataMonitor::getHumidity() { return humidity; }
+int DataMonitor::getCO2ppm() { return CO2ppm; }

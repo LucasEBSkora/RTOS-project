@@ -4,7 +4,8 @@
 typedef enum measurement_type_t
 {
   TEMPERATURE,
-  HUMIDITY
+  HUMIDITY,
+  CO2
 } measurementType;
 
 typedef struct measurement_t
@@ -13,6 +14,7 @@ typedef struct measurement_t
   union
   {
     float floatValue;
+    int intValue;
   } value;
 
 } Measurement;
