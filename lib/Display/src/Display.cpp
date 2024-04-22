@@ -19,7 +19,7 @@ void Display::run()
     String text;
     if (!activeManager.isActive())
     {
-      text = "no user present - system inactive";
+      text = "no user present\nsystem inactive";
     }
     else
     {

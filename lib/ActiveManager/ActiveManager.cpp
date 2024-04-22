@@ -1,35 +1,32 @@
 #include "ActiveManager.h"
 
-ActiveManager::ActiveManager() : active{false}, listMutex{xSemaphoreCreateMutex()}
+ActiveManager::ActiveManager() : active{false}, waitingTasks{0}, mutex{xSemaphoreCreateMutex()}, semaphore{xSemaphoreCreateBinary()}
 {
 }
 
 void ActiveManager::setActive(bool active)
 {
   this->active = active;
-  if (!this->active)
+  if (!this->active || waitingTasks == 0)
     return;
-  xSemaphoreTake(listMutex, portMAX_DELAY);
+  xSemaphoreTake(mutex, portMAX_DELAY);
   {
-    for (TaskHandle_t task : waitingTasks)
-    {
-      xTaskNotify(task, 1, eSetBits);
-    }
-    waitingTasks.clear();
+    for (int i = 0; i < waitingTasks; ++i)
+      xSemaphoreGive(semaphore);
   }
-  xSemaphoreGive(listMutex);
+  xSemaphoreGive(mutex);
 }
 
 void ActiveManager::checkActiveBlocking()
 {
   if (active)
     return;
-  xSemaphoreTake(listMutex, portMAX_DELAY);
+  xSemaphoreTake(mutex, portMAX_DELAY);
   {
-    waitingTasks.push_back(xTaskGetCurrentTaskHandle());
-    xTaskNotifyWait(0, ULONG_MAX, nullptr, portMAX_DELAY);
+    waitingTasks++;
   }
-  xSemaphoreGive(listMutex);
+  xSemaphoreGive(mutex);
+  xSemaphoreTake(semaphore, portMAX_DELAY);
 }
 
 bool ActiveManager::isActive()

@@ -29,7 +29,6 @@ void SerialReceiverOtherESP::run()
   while (true)
   {
     uart_get_buffered_data_len(port, &available_bytes);
-    printf("available bytes: %d\n", available_bytes);
     if (available_bytes > 0)
     {
 
@@ -41,7 +40,7 @@ void SerialReceiverOtherESP::run()
         flagUserDetected(data[1]);
         break;
       case 1:
-        addCO2Measurement(data[2], data[1]);
+        addCO2Measurement(data[1], data[2]);
         break;
       }
     }
@@ -49,16 +48,15 @@ void SerialReceiverOtherESP::run()
   }
 }
 
-bool SerialReceiverOtherESP::flagUserDetected(uint8_t val)
+void SerialReceiverOtherESP::flagUserDetected(uint8_t val)
 {
   activeManager.setActive(val);
   if (!val)
   {
     printf("no user detected!\n");
-    return false;
+    return;
   }
   printf("user detected!\n");
-  return true;
 }
 
 void SerialReceiverOtherESP::addCO2Measurement(uint8_t high, uint8_t low)

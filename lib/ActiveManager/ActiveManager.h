@@ -16,8 +16,9 @@ public:
 
 private:
   bool active;
-  std::vector <TaskHandle_t> waitingTasks;
-  SemaphoreHandle_t listMutex;
+  int waitingTasks;
+  SemaphoreHandle_t mutex;
+  SemaphoreHandle_t semaphore;
 };
 
 #endif

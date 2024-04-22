@@ -14,7 +14,7 @@ public:
   void run();
 
 private:
-  bool flagUserDetected(uint8_t val);
+  void flagUserDetected(uint8_t val);
   void addCO2Measurement(uint8_t high, uint8_t low);
   uart_port_t port;
   TickType_t period_ticks;

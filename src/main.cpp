@@ -14,6 +14,8 @@
 #define DISPLAY_ADDRESS 0x3c
 #define DISPLAY_SCL 5
 #define DISPLAY_SDA 4
+#define RX 26
+#define TX 27
 
 #define DHT22_PIN 15
 
@@ -41,7 +43,7 @@ void taskDataMonitor(void *)
 
 void taskSerialReceiverOtherESP(void *)
 {
-  SerialReceiverOtherESP serial{UART_NUM_2, 1000, 27, 26, buffer, activeManager};
+  SerialReceiverOtherESP serial{UART_NUM_2, 100, TX, RX, buffer, activeManager};
   serial.run();
 }
 
