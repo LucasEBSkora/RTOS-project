@@ -12,7 +12,6 @@ DHT22::DHT22(int pin, int period_ms, ThreadSafeBuffer<Measurement> &buffer, Acti
 void DHT22::run()
 {
   TickType_t xLastWakeTime = xTaskGetTickCount();
-  int t = 0;
   while (true)
   {
     activeManager.checkActiveBlocking();
